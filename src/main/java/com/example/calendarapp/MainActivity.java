@@ -20,7 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,29 +61,92 @@ public class MainActivity extends AppCompatActivity {
         // [START write_message]
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Student");
-
+        //final DatabaseReference StudentDatabase = database.getReference("Student");
+        final DatabaseReference CalendarDatabase = database.getReference();
         //myRef.setValue("Hello, World!");
         // [END write_message]
 
         // [START read_message]
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+
+        CalendarDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 //String value = dataSnapshot.getValue(String.class);
-                //String value = dataSnapshot.getValue(String.class);
-                //List<String> td = (ArrayList<String>) dataSnapshot.getChildren();
-                //Log.d(TAG, "Value is: " + value);
-                //Log.d(TAG, "Value is: " + td);
-                for(DataSnapshot childDataSnapshot: dataSnapshot.child("Joey").getChildren()){
-                    Log.v(TAG,""+ childDataSnapshot.getKey()); //displays the key for the node
-                    Log.v(TAG,""+ childDataSnapshot.getValue());   //gives the value for given keyname
+                //List<String> LIST = (ArrayList<String>) dataSnapshot.getChildren();
 
+                // Example of getting a particular Student Object
+                //Student student = dataSnapshot.child("Joey").getValue(Student.class);
+                //System.out.println(dataSnapshot.getKey() + " id is " + student.id);
+
+                /* Get each detail in Joey
+                for (DataSnapshot childDataSnapshot : dataSnapshot.child("Joey").getChildren()) {
+                    Log.v(TAG, "" + childDataSnapshot.getKey()); //displays the key for the node
+                    Log.v(TAG, "" + childDataSnapshot.getValue());   //gives the value for given keyname
+
+                }
+                */
+
+                System.out.println("*************************************************************");
+                System.out.println("*************************************************************");
+                //----------------Get all data from firebase object orientedly--------------------
+
+                // dataSnapshot = root of Calendar App
+                //   |-dataSnapshot.child("Student") eg. use .getKey() or .getValue()
+                //   |-dataSnapshot.child("Teacher")
+                //   |-dataSnapshot.child("Subject")
+                //      |-dataSnapshot.child("Subject").child("Computer Structures")
+                //      |-dataSnapshot.child("Subject").child("Introduction To Algorithms")
+                //      |-dataSnapshot.child("Subject").child("Introduction to Information Systems and Programming")
+                //          |-dataSnapshot.child("Subject").child("Introduction to Information Systems and Programming").child("Homework")
+
+                // Examples of printing out Data
+                System.out.println("Database Children: " + dataSnapshot.getValue());
+                System.out.println("Database Children: " + dataSnapshot.child("Student").getValue());
+
+
+
+                // GET STUDENTS
+                ArrayList<Student> students = new ArrayList<>();
+                for (DataSnapshot studentDataSnapshot : dataSnapshot.child("Student").getChildren()) {
+                    students.add(studentDataSnapshot.getValue(Student.class));
+                }
+
+                // GET TEACHERS
+                ArrayList<Teacher> teachers = new ArrayList<>();
+                for (DataSnapshot teacherDataSnapshot : dataSnapshot.child("Teacher").getChildren()){
+                    teachers.add(teacherDataSnapshot.getValue(Teacher.class));
+                }
+
+                // Get SUBJECTS
+                ArrayList<Subject> subjects = new ArrayList<>();
+                ArrayList<Homework> homeworks = new ArrayList<>();
+                for (DataSnapshot subjectDataSnapshot : dataSnapshot.child("Subject").getChildren()){
+                    subjects.add(subjectDataSnapshot.getValue(Subject.class));
+                                                            //dataSnapshot.child("Subject").child("Homework").getChildren()
+                    for(DataSnapshot homeworkDataSnapshot : subjectDataSnapshot.getChildren()) {
+                        homeworks.add(subjectDataSnapshot.child("Homework").getValue(Homework.class));
                     }
                 }
+
+
+                /*
+                for (Subject s : subjects){
+                    homeworks.add(s);
+                }
+                */
+
+                // Print out all Data Respectively, eg. Student Teacher
+                //System.out.println("Student_ArrayList: " + Arrays.toString(students.toArray()));
+                Log.d(TAG, "Student_ArrayList: " + Arrays.toString(students.toArray()));
+                //System.out.println("Teacher_Array_List: " + Arrays.toString(teachers.toArray()));
+                Log.d(TAG, "Teacher_Array_List: " + Arrays.toString(teachers.toArray()));
+
+                Log.d(TAG, "Subject_Array_List: " + Arrays.toString(subjects.toArray()));
+                Log.d(TAG, "Homework_Array_List: " + Arrays.toString(homeworks.toArray()));
+            }
 
             @Override
             public void onCancelled(DatabaseError error) {
@@ -89,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-        // [END read_message]
-    }
 
-
+    } // basicReadWrite() End
 }
