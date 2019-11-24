@@ -2,9 +2,15 @@ package com.example.calendarapp;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
-    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         //FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -63,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //final DatabaseReference StudentDatabase = database.getReference("Student");
         final DatabaseReference CalendarDatabase = database.getReference();
+
         //myRef.setValue("Hello, World!");
         // [END write_message]
 
@@ -120,23 +129,17 @@ public class MainActivity extends AppCompatActivity {
                     teachers.add(teacherDataSnapshot.getValue(Teacher.class));
                 }
 
-                // Get SUBJECTS
+                // Get SUBJECTS (One of the more confusing Loops)
                 ArrayList<Subject> subjects = new ArrayList<>();
                 ArrayList<Homework> homeworks = new ArrayList<>();
+                // for loop for each subject
                 for (DataSnapshot subjectDataSnapshot : dataSnapshot.child("Subject").getChildren()){
                     subjects.add(subjectDataSnapshot.getValue(Subject.class));
-                                                            //dataSnapshot.child("Subject").child("Homework").getChildren()
-                    for(DataSnapshot homeworkDataSnapshot : subjectDataSnapshot.getChildren()) {
-                        homeworks.add(subjectDataSnapshot.child("Homework").getValue(Homework.class));
+                    // for loop for each homework in each subject
+                    for(DataSnapshot homeworkDataSnapshot : subjectDataSnapshot.child("Homework").getChildren()) {
+                        homeworks.add(homeworkDataSnapshot.getValue(Homework.class));
                     }
                 }
-
-
-                /*
-                for (Subject s : subjects){
-                    homeworks.add(s);
-                }
-                */
 
                 // Print out all Data Respectively, eg. Student Teacher
                 //System.out.println("Student_ArrayList: " + Arrays.toString(students.toArray()));
@@ -154,6 +157,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-
     } // basicReadWrite() End
-}
+
+}// MainActivity End
