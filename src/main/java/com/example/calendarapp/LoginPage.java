@@ -1,6 +1,7 @@
 package com.example.calendarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,18 +21,23 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class LoginPage extends AppCompatActivity {
 
     private static final String TAG = "Daniel";
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    //final DatabaseReference StudentDatabase = database.getReference("Student");
+    final DatabaseReference CalendarDatabase = database.getReference();
+
 
     ArrayList<Student> students = new ArrayList<>();
     ArrayList<Teacher> teachers = new ArrayList<>();
+    ArrayList<Subject> subjects = new ArrayList<>();
 
-    private EditText Name;
+    private EditText Id;
     private EditText Password;
     private TextView Info;
     private Button Login;
@@ -43,7 +49,7 @@ public class LoginPage extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         basicReadWrite();
-        Name=(EditText)findViewById(R.id.edtxtName);
+        Id=(EditText)findViewById(R.id.edtxtName);
         Password=(EditText)findViewById(R.id.edtxtPassword);
         Info=(TextView)findViewById(R.id.txtviewinfo);
         Login=(Button)findViewById(R.id.btnLogin);
@@ -55,40 +61,56 @@ public class LoginPage extends AppCompatActivity {
         ArrayList<Integer> t_ids = new ArrayList<>();
         ArrayList<String> t_passwords = new ArrayList<>();
 
-        /*
-        for(Student s: students){
-            s_ids.add(s.id);
-            s_passwords.add(s.password);
-        }
-        for(Teacher t: teachers){
-            t_ids.add(t.id);
-            t_passwords.add(t.password);
-        }
-        */
 
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validate(Name.getText().toString(),Password.getText().toString());
+                // IMPORTANT *** This is how you get the text from textbox ***
+                validate(Id.getText().toString(),Password.getText().toString());
+
             }
         });
 
         mAuth = FirebaseAuth.getInstance();
     }
 
-    private void validate(String userName,String userPassword){
+    private void validate(String userId,String userPassword){
         for(Student s: students){
-            if(s.id == Integer.valueOf(userName) && s.password.equals(userPassword)){
+            if(s.id == Integer.valueOf(userId) && s.password.equals(userPassword)){
                 Intent intent = new Intent(LoginPage.this, MainActivity.class);
+                intent.putExtra("name",s.getName());
+                intent.putExtra("id",userId);
+                intent.putExtra("password",userPassword);
                 startActivity(intent);
+
+                //Start Service
+                //Intent serviceIntent = new Intent(this, MyService.class);
+                //serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+                //serviceIntent.putExtra("subjects",Arrays.toString(subjects.toArray()));
+
+                //Log.e(TAG,Arrays.toString(subjects.toArray()));
+                //ContextCompat.startForegroundService(this, serviceIntent);
+                //startService(serviceIntent);
+                //database.goOffline();
                 break;
             }
         }
 
         for(Teacher t: teachers){
-            if(t.id == Integer.valueOf(userName) && t.password.equals(userPassword)){
-                Intent intent = new Intent(LoginPage.this, MainActivity.class);
+            if(t.id == Integer.valueOf(userId) && t.password.equals(userPassword)){
+                Intent intent = new Intent(LoginPage.this, TeacherActivity.class);
+                intent.putExtra("id",userId);
+                intent.putExtra("password",userPassword);
                 startActivity(intent);
+
+                //Start Service
+                //Intent serviceIntent = new Intent(this, MyService.class);
+                //serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+                //serviceIntent.putExtra("subjects",Arrays.toString(subjects.toArray()));
+                //Log.e(TAG,Arrays.toString(subjects.toArray()));
+                //ContextCompat.startForegroundService(this, serviceIntent);
+
+                //startService(serviceIntent);
                 break;
             }
         }
@@ -116,9 +138,12 @@ public class LoginPage extends AppCompatActivity {
 
         // [START write_message]
         // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        //FirebaseDatabase database = FirebaseDatabase.getInstance();
+
         //final DatabaseReference StudentDatabase = database.getReference("Student");
-        final DatabaseReference CalendarDatabase = database.getReference();
+
+        //final DatabaseReference CalendarDatabase = database.getReference();
 
         //final ArrayList<Student> students = new ArrayList<>();
         //final ArrayList<Teacher> teachers = new ArrayList<>();
@@ -171,6 +196,12 @@ public class LoginPage extends AppCompatActivity {
                     teachers.add(teacherDataSnapshot.getValue(Teacher.class));
                 }
 
+                // Get SUBJECTS (One of the more confusing Loops)
+                // for loop for each subject
+                for (DataSnapshot subjectDataSnapshot : dataSnapshot.child("Subject").getChildren()){
+                    subjects.add(subjectDataSnapshot.getValue(Subject.class));
+                }
+
                 // Print out all Data Respectively, eg. Student Teacher
                 //System.out.println("Student_ArrayList: " + Arrays.toString(students.toArray()));
                 Log.d(TAG, "Student_ArrayList: " + Arrays.toString(students.toArray()));
@@ -197,6 +228,5 @@ public class LoginPage extends AppCompatActivity {
             passwords.add(t.password);
         }
         */
-
     } // basicReadWrite() End
 }
