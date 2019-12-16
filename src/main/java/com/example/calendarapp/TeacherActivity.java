@@ -17,7 +17,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.*;
+//import com.google.firebase.messaging.FirebaseMessagingException;
+//import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.RemoteMessage;
 
 public class TeacherActivity extends AppCompatActivity {
 
@@ -55,60 +57,74 @@ public class TeacherActivity extends AppCompatActivity {
         }
         // [END handle_data_extras]
 
-        Button subscribeButton = findViewById(R.id.subscribeButton);
-        subscribeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Subscribing to weather topic");
-                // [START subscribe_topics]
-                FirebaseMessaging.getInstance().subscribeToTopic("weather")
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                String msg = getString(R.string.msg_subscribed);
-                                if (!task.isSuccessful()) {
-                                    msg = getString(R.string.msg_subscribe_failed);
-                                }
-                                Log.d(TAG, msg);
-                                Toast.makeText(TeacherActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                // [END subscribe_topics]
-            }
-        });
+//        Button subscribeButton = findViewById(R.id.subscribeButton);
+//        subscribeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "Subscribing to weather topic");
+//                // [START subscribe_topics]
+//                FirebaseMessaging.getInstance().subscribeToTopic("weather")
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                String msg = getString(R.string.msg_subscribed);
+//                                if (!task.isSuccessful()) {
+//                                    msg = getString(R.string.msg_subscribe_failed);
+//                                }
+//                                Log.d(TAG, msg);
+//                                Toast.makeText(TeacherActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                // [END subscribe_topics]
+//            }
+//        });
+//
+//        Button logTokenButton = findViewById(R.id.logTokenButton);
+//        logTokenButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Get token
+//                // [START retrieve_current_token]
+//                FirebaseInstanceId.getInstance().getInstanceId()
+//                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                                if (!task.isSuccessful()) {
+//                                    Log.w(TAG, "getInstanceId failed", task.getException());
+//                                    return;
+//                                }
+//
+//                                // Get new Instance ID token
+//                                String token = task.getResult().getToken();
+//
+//                                // Log and toast
+//                                String msg = getString(R.string.msg_token_fmt, token);
+//                                Log.d(TAG, msg);
+//                                Toast.makeText(TeacherActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                // [END retrieve_current_token]
+//            }
+//        });
+    }
 
-        Button logTokenButton = findViewById(R.id.logTokenButton);
-        logTokenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get token
-                // [START retrieve_current_token]
-                FirebaseInstanceId.getInstance().getInstanceId()
-                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.w(TAG, "getInstanceId failed", task.getException());
-                                    return;
-                                }
-
-                                // Get new Instance ID token
-                                String token = task.getResult().getToken();
-
-                                // Log and toast
-                                String msg = getString(R.string.msg_token_fmt, token);
-                                Log.d(TAG, msg);
-                                Toast.makeText(TeacherActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                // [END retrieve_current_token]
-            }
-        });
+    public void sendUpstream() {
+        final String SENDER_ID = "YOUR_SENDER_ID";
+        final int messageId = 0; // Increment for each
+        // [START fcm_send_upstream]
+        FirebaseMessaging fm = FirebaseMessaging.getInstance();
+        fm.send(new RemoteMessage.Builder(SENDER_ID + "@fcm.googleapis.com")
+                .setMessageId(Integer.toString(messageId))
+                .addData("my_message", "Hello World")
+                .addData("my_action","SAY_HELLO")
+                .build());
+        // [END fcm_send_upstream]
     }
 
 //    public void sendToTopic() throws FirebaseMessagingException {
 //        // [START send_to_topic]
 //        // The topic name can be optionally prefixed with "/topics/".
+//        /*
 //        String topic = "highScores";
 //
 //        // See documentation on defining a message payload.
@@ -123,6 +139,7 @@ public class TeacherActivity extends AppCompatActivity {
 //        // Response is a message ID string.
 //        System.out.println("Successfully sent message: " + response);
 //        // [END send_to_topic]
+//        */
 //    }
 
 }

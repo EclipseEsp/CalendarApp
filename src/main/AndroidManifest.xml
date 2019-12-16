@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SubscribeActivity"></activity>
+        <activity android:name=".Scroller"></activity>
+        <activity android:name=".SubscribeActivity" />
         <activity android:name=".TeacherActivity" />
 
         <service
@@ -35,7 +36,9 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_nav_"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LoginPage">
+        <activity
+            android:name=".LoginPage"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

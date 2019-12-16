@@ -7,13 +7,42 @@
     tools:context=".SubscribeActivity">
 
     <Button
-        android:id="@+id/subscribeButton"
+        android:id="@+id/subscribe_50_001"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="289dp"
-        android:text="Subscribe"
+        android:layout_marginTop="180dp"
+        android:text="Subscribe to 50.001"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/subscribe_50_002"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Subscribe To 50.002"
+        app:layout_constraintStart_toStartOf="@+id/subscribe_50_001"
+        app:layout_constraintTop_toBottomOf="@+id/subscribe_50_001" />
+
+    <Button
+        android:id="@+id/subscribe_50_004"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:text="Subscribe To 50.004"
+        app:layout_constraintStart_toStartOf="@+id/subscribe_50_002"
+        app:layout_constraintTop_toBottomOf="@+id/subscribe_50_002" />
+
+    <Button
+        android:id="@+id/logTokenButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="Log Token"
+        app:layout_constraintEnd_toEndOf="@+id/subscribe_50_004"
+        app:layout_constraintTop_toBottomOf="@+id/subscribe_50_004" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

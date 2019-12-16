@@ -16,8 +16,12 @@
     <string name="menu_send">Send</string>
     <string name="title_activity_nav_">Nav_Activity</string>
 
+    <string name="title_schedule">Schedule</string>
+
     <string name="menu_addevent">Add Event</string>
     <string name="menu_uploadnotes">Upload Notes</string>
+    <string name="menu_subscribe">Subscribe</string>
+    <string name="menu_viewschedule">View Schedule</string>
 
     <string name="quickstart_message">Click the SUBSCRIBE TO WEATHER button below to subscribe to the
         weather topic. Messages sent to the weather topic will be received. The LOG TOKEN button logs the

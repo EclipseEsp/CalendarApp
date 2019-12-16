@@ -61,13 +61,25 @@ public class UploadEvent extends AppCompatActivity {
         });
 
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+                int length = String.valueOf(day).length();
+                int length2 = String.valueOf(month).length();
 
-                String date = day + "/" + month + "/" + year;
-                datetrimmed = day + "" + month + "" + year;
+                String test = String.valueOf(day);
+                String test2 = String.valueOf(month);
+                if(length == 1) {
+                    test = "0" + day;
+                }
+                if(length2 == 1) {
+                    test2 = "0" + month;
+                }
+                String date = test + "/" + test2 + "/" + year;
+                datetrimmed = test + "" + test2 + "" + year;
                 mDisplayDate.setText(date);
             }
         };

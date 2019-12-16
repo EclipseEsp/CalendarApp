@@ -9,13 +9,29 @@
             android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_uploadevent"
             android:icon="@drawable/ic_menu_add"
             android:title="@string/menu_addevent" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_uploadnotes"
             android:icon="@drawable/ic_menu_add"
             android:title="@string/menu_uploadnotes" />
+
+        <item
+            android:id="@+id/nav_subscribe"
+            android:icon="@drawable/ic_menu_add"
+            android:title="@string/menu_subscribe" />
+
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_menu_add"
+            android:title="@string/menu_viewschedule" />
+
+        <item
+            android:id="@+id/nav_send"
+            android:icon="@drawable/ic_menu_add"
+            android:title="@string/menu_uploadnotes"
+            android:visible="false" />
     </group>
 
 </menu>

@@ -103,7 +103,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (dayOfMonthText.length() == 1) {
                     dayOfMonthText = "0" + dayOfMonthText;
                 }
+
                 String monthText = Integer.toString(month);
+                int length2 = String.valueOf(monthText).length();
+                if (length2 == 1) {
+                    monthText = "0" + monthText;
+                }
+
+               // String monthText = Integer.toString(month);
                 String yearText = Integer.toString(year);
                 String date = dayOfMonthText + monthText + yearText;
 
@@ -281,20 +288,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent nextIntent = new Intent(this,MainActivity.class);
             //nextIntent.putExtra("name",current_name);
             startActivity(nextIntent);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_uploadevent) {
             // ------------------- UPLOAD EVENT -------------------------
             Intent nextIntent = new Intent(MainActivity.this,UploadEvent.class);
             nextIntent.putExtra("name",current_name);
             startActivity(nextIntent);
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_uploadnotes) {
             // ------------------- UPLOAD NOTES -------------------------
             Intent nextIntent = new Intent(MainActivity.this,UploadNotes.class);
             nextIntent.putExtra("name",current_name);
             startActivity(nextIntent);
-        } else if (id == R.id.nav_tools) {
-
+        } else if (id == R.id.nav_subscribe) {
+            // ------------------- Subscribe -------------------------
+            Intent nextIntent = new Intent(MainActivity.this,SubscribeActivity.class);
+            nextIntent.putExtra("name",current_name);
+            startActivity(nextIntent);
         } else if (id == R.id.nav_share) {
-
+            Intent nextIntent = new Intent(MainActivity.this,Scroller.class);
+            nextIntent.putExtra("name",current_name);
+            startActivity(nextIntent);
         } else if (id == R.id.nav_send) {
 
         }

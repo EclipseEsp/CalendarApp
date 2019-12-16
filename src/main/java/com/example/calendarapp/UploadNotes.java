@@ -43,9 +43,11 @@ import java.util.UUID;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
+
 public class UploadNotes extends AppCompatActivity {
 
     private Button btnChoose, btnUpload, btnDownload;
+    private ImageView imageView;
     //    private ImageView imageView;
     private TextView notification;
     FirebaseStorage storage;
@@ -67,6 +69,104 @@ public class UploadNotes extends AppCompatActivity {
         setContentView(R.layout.activity_upload_notes);
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+        btnChoose = (Button) findViewById(R.id.btnChoose);
+        btnUpload = (Button) findViewById(R.id.btnUpload);
+
+        imageView = (ImageView) findViewById(R.id.imageView);
+
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        //notification.setText("Pdf files only");
+
+
+        btnChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
+        btnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //uploadPdf();
+                uploadImage();
+            }
+        });
+
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        //intent.setType("application/*");
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        //startActivityForResult(intent,86);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //if(requestCode == 86 && resultCode == RESULT_OK && data != null && data.getData() != null)
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            //notification.setText("File selected, proceed to upload");
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageView.setImageBitmap(bitmap);
+                //notification.setText("File selected, proceed to upload");
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(UploadNotes.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(UploadNotes.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
+    }
+}
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        /*
         btnChoose = (Button) findViewById(R.id.btnChoose);
         btnUpload = (Button) findViewById(R.id.btnUpload);
         btnDownload = (Button) findViewById(R.id.btnDownload);
@@ -221,3 +321,4 @@ public class UploadNotes extends AppCompatActivity {
 
     }
 }
+*/
